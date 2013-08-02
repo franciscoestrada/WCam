@@ -1,0 +1,50 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Usando UserMedia</title>
+    <link href='https://fonts.googleapis.com/css?family=Armata' rel='stylesheet' type='text/css'>
+    <link href=estilos.css type=text/css rel=stylesheet>
+</head>
+<body>
+    <header>
+    <h1>WebCam</h1>
+    </header>
+<video id="video" width="640" height="480" autoplay></video>
+<br>
+<button id="snap">Capturar Foto</button>
+<br>
+<canvas id="canvas" width="640" height="480"></canvas>
+
+<script>
+// Colocar los event listeners en su lugar:
+window.addEventListener("DOMContentLoaded", function() {
+  // Capturar elementos, crear opciones, etc.
+  var canvas = document.getElementById("canvas"),
+    context = canvas.getContext("2d"),
+    video = document.getElementById("video"),
+    videoObj = { "video": true },
+    errBack = function(error) {
+      console.log("Video capture error: ", error.code); 
+    };
+
+  // Colocar los video listeners en su lugar:
+  if(navigator.getUserMedia) { // Opción estándar
+    navigator.getUserMedia(videoObj, function(stream) {
+      video.src = stream;
+      video.play();
+    }, errBack);
+  } else if(navigator.webkitGetUserMedia) { // Opción WebKit
+    navigator.webkitGetUserMedia(videoObj, function(stream){
+      video.src = window.webkitURL.createObjectURL(stream);
+      video.play();
+    }, errBack);
+  }
+  
+    // La opción para capturar fotos:
+document.getElementById("snap").addEventListener("click", function() {
+  context.drawImage(video, 0, 0, 640, 480);
+  });
+  }, false);
+</script>
+ </body>
+</html>
